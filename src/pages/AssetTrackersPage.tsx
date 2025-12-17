@@ -6,7 +6,7 @@ import { Dashboard } from '../components/Dashboard';
 import { QRScanner } from '../components/QRScanner';
 import { SuperTagConfiguration } from '../components/SuperTagConfiguration';
 import { ProcessedMarker } from '../types/assets';
-import { QrCode, ArrowLeft } from 'lucide-react';
+import { QrCode, ArrowLeft, Search } from 'lucide-react';
 
 interface AssetTrackersPageProps {
   assets: ProcessedMarker[];
@@ -51,13 +51,17 @@ export function AssetTrackersPage({
         <div className="w-2/10 bg-white border-r border-gray-200">
           <div className="p-4 border-b border-gray-200">
             <div className="relative">
-              <input
-                type="search"
-                placeholder="Search assets..."
-                value={searchTerm}
-                onChange={(e) => onSearchChange(e.target.value)}
-                className="w-full pl-4 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#87B812]"
-              />
+              <div className="flex border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#87B812]"
+                   tabIndex={0}>
+                <input
+                  type="search"
+                  placeholder="i.e. 'Car' 'F8:FC:C8:E4:0A:0B' 'L62721AE9B2A'"
+                  value={searchTerm}
+                  onChange={(e) => onSearchChange(e.target.value)}
+                  className="w-full pl-4 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#87B812]"
+                />
+                <Search className="w-5 h-5"/>
+              </div>
             </div>
           </div>
           <div className="overflow-y-auto h-[calc(100%-75px)]">
