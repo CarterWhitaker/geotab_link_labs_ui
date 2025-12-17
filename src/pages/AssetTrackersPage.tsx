@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Map } from '../components/Map';
 import { AssetList } from '../components/AssetList';
 import { AssetDetailOverlay } from '../components/AssetDetailOverlay';
@@ -43,6 +43,12 @@ export function AssetTrackersPage({
     zoom: selectedAsset ? 15 : 13
   };
 
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  function focusSearchBar() {
+    inputRef.current?.focus()
+  }
+
   return (
     <main className="h-[calc(100vh-153px)] relative">
       {/* Desktop Layout */}
@@ -51,16 +57,19 @@ export function AssetTrackersPage({
         <div className="w-2/10 bg-white border-r border-gray-200">
           <div className="p-4 border-b border-gray-200">
             <div className="relative">
-              <div className="flex border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#87B812]"
+              <div className="flex border border-gray-200 rounded-lg focus-within:outline-none focus-within:ring-2 focus-within:ring-[#87B812] items-center"
                    tabIndex={0}>
                 <input
+                  ref={inputRef}
                   type="search"
-                  placeholder="i.e. 'Car' 'F8:FC:C8:E4:0A:0B' 'L62721AE9B2A'"
+                  placeholder="Name, MAC Addr, or Serial #"
                   value={searchTerm}
                   onChange={(e) => onSearchChange(e.target.value)}
-                  className="w-full pl-4 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#87B812]"
+                  className="w-11/12 pl-4 pr-4 py-2 rounded-lg focus:outline-none"
                 />
-                <Search className="w-5 h-5"/>
+                <div className="w-1/12 h-full pr-8 items-center"onClick={focusSearchBar}>
+                  <Search className="h-5 text-gray-700"/>
+                </div>
               </div>
             </div>
           </div>
