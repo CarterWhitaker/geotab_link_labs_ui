@@ -11,6 +11,8 @@ import { QrCode, ArrowLeft, Search } from 'lucide-react';
 interface AssetTrackersPageProps {
   assets: ProcessedMarker[];
   searchTerm: string;
+  isLeashedChecked: boolean;
+  onLeashedChange: (isChecked: boolean) => void;
   onSearchChange: (term: string) => void;
 }
 
@@ -19,14 +21,17 @@ type AssetViewType = 'all' | 'supertags' | 'sensors';
 export function AssetTrackersPage({
   assets,
   searchTerm,
+  isLeashedChecked,
+  onLeashedChange,
   onSearchChange
 }: AssetTrackersPageProps) {
   const [selectedAsset, setSelectedAsset] = useState<ProcessedMarker | null>(null);
   const [assetViewType, setAssetViewType] = useState<AssetViewType>(() => 
     (localStorage.getItem('assetViewType') as AssetViewType) || 'all'
   );
-  const [showQRScanner, setShowQRScanner] = useState(false);
+  const [showQRScanner, setShowQRScanner]       = useState(false);
   const [isDetailExpanded, setIsDetailExpanded] = useState(true);
+  const inputRef                                = useRef<HTMLInputElement>(null)
 
   const handleAssetSelect = (asset: ProcessedMarker | null) => {
     setSelectedAsset(asset);
@@ -42,8 +47,6 @@ export function AssetTrackersPage({
     center: selectedAsset ? selectedAsset.position : assets[0]?.position ?? [39.8283459, -98.5820546],
     zoom: selectedAsset ? 15 : 13
   };
-
-  const inputRef = useRef<HTMLInputElement>(null)
 
   function focusSearchBar() {
     inputRef.current?.focus()
@@ -67,10 +70,23 @@ export function AssetTrackersPage({
                   onChange={(e) => onSearchChange(e.target.value)}
                   className="w-11/12 pl-4 pr-4 py-2 rounded-lg focus:outline-none"
                 />
-                <div className="w-1/12 h-full pr-8 items-center"onClick={focusSearchBar}>
+                <div className="w-1/12 h-full pr-8 items-center" onClick={focusSearchBar}>
                   <Search className="h-5 text-gray-700"/>
                 </div>
               </div>
+              <label className="flex justify-between items-center pt-2 pl-1 cursor-pointer">
+                <span className="pr-2 text-gray-700">Include Connected Assets</span>
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    checked={isLeashedChecked}
+                    onChange={(e) => onLeashedChange(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="block h-6 w-10 rounded-full bg-[#E5E7EB] peer-checked:bg-[#87B812] transition"></div>
+                  <div className="dot absolute left-1 top-1 h-4 w-4 rounded-full bg-white peer-checked:left-5 transition"></div>
+                </div>                  
+              </label>
             </div>
           </div>
           <div className="overflow-y-auto h-[calc(100%-75px)]">
@@ -111,7 +127,7 @@ export function AssetTrackersPage({
               <div className="relative">
                 <input
                   type="search"
-                  placeholder="Search assets..."
+                  placeholder="Search by: Name, MAC Addr, or SN"
                   value={searchTerm}
                   onChange={(e) => onSearchChange(e.target.value)}
                   className="w-full pl-4 pr-12 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#87B812]"
@@ -124,6 +140,19 @@ export function AssetTrackersPage({
                   <QrCode className="w-5 h-5 text-gray-400 hover:text-[#87B812]" />
                 </button>
               </div>
+              <label className="flex justify-between items-center pt-2 pl-1 cursor-pointer">
+                <span className="pr-2 text-gray-700">Include Connected Assets</span>
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    checked={isLeashedChecked}
+                    onChange={(e) => onLeashedChange(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="block h-6 w-10 rounded-full bg-[#E5E7EB] peer-checked:bg-[#87B812] transition"></div>
+                  <div className="dot absolute left-1 top-1 h-4 w-4 rounded-full bg-white peer-checked:left-5 transition"></div>
+                </div>                  
+              </label>
             </div>
 
             <div className="flex-1 overflow-y-auto">
